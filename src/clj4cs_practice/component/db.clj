@@ -2,13 +2,11 @@
   (:require [com.stuartsierra.component :as component])
   (:import (java.util UUID)))
 
-(def state (atom {}))
-
 (defrecord Db []
 
   component/Lifecycle
   (start [component]
-    (assoc component :state state))
+    (assoc component :state (atom [])))
 
   (stop [component]
     (dissoc component :state)))
@@ -16,11 +14,21 @@
 (defn new-db []
   (map->Db {}))
 
-(defn store [{state :state} entity]
-  (let [id (str (UUID/randomUUID))]
-    (swap! state #(assoc % (keyword id) entity))))
+(defn store [component entity]
+  (->> (UUID/randomUUID)
+       str
+       (assoc entity :id)
+       (swap! (:state component) conj))
+  component)
+
+(defn query [{state :state} criteria]
+  (filter criteria @state))
 
 (comment
-  (-> (new-db)
-      (component/start)
-      (store {:coisa 1})))
+  (let [comp (component/start (new-db))]
+    (store comp {:coisa 1})
+    (store comp {:coisa 2})
+    (store comp {:coisa 3})
+    (store comp {:coisa 4})
+    (prn (query comp identity))
+    (prn (query comp #(-> % :coisa even?)))))
