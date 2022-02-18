@@ -1,27 +1,26 @@
 (ns clj4cs-practice.component.db
-  (:require [com.stuartsierra.component :as component]))
+  (:require [com.stuartsierra.component :as component])
+  (:import (java.util UUID)))
 
-(def db (atom {}))
+(def state (atom {}))
 
 (defrecord Db []
 
   component/Lifecycle
   (start [component]
-    (assoc component :db db))
+    (assoc component :state state))
 
   (stop [component]
-    (dissoc component :db)))
+    (dissoc component :state)))
 
 (defn new-db []
   (map->Db {}))
 
-(defn store [db id entity]
-  (swap! db #(assoc % (keyword id) entity)))
+(defn store [{state :state} entity]
+  (let [id (str (UUID/randomUUID))]
+    (swap! state #(assoc % (keyword id) entity))))
 
 (comment
   (-> (new-db)
       (component/start)
-      :db
-      (store "123" {:coisa 1})
-      prn)
-  )
+      (store {:coisa 1})))
