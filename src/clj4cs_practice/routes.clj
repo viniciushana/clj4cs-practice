@@ -3,9 +3,9 @@
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http :as http]))
 
-(defn home-page [_]
-  (ring-resp/response {:entity {:id 1}}))
+(defn home-page [{json :json-params}]
+  (ring-resp/response {:entity (assoc json :responded "ok")}))
 
 (def common-interceptors [(body-params/body-params) http/json-body])
 
-(def routes #{["/" :get (conj common-interceptors `home-page) :route-name :greet]})
+(def routes #{["/" :post (conj common-interceptors `home-page) :route-name :greet]})

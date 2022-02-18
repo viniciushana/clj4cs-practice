@@ -6,7 +6,8 @@
             [clojure.test :refer :all]
             [clj4cs-practice.routes :as routes]
             [clj4cs-practice.system :as system]
-            [clj4cs-practice.component.pedestal :refer :all]))
+            [clj4cs-practice.component.pedestal :refer :all]
+            [cheshire.core :as json]))
 
 (def url-for (route/url-for-routes
                (route/expand-routes routes/routes)))
@@ -27,8 +28,9 @@
   (with-system [sut (system/new-system :test)]
                (let [service               (service-fn sut)
                      {:keys [status body]} (response-for service
-                                                         :get
-                                                         (url-for :greet))]
+                                                         :post
+                                                         (url-for :greet)
+                                                         :headers {"Content-Type" "application/json"}
+                                                         :body (json/encode {:a 1}))]
                  (is (= status 200))
-                 (prn body)
-                 (is (= body "{\"entity\":{\"id\":1}}")))))
+                 (is (= body "{\"entity\":{\"a\":1,\"responded\":\"ok\"}}")))))

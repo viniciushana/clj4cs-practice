@@ -10,7 +10,7 @@
   (stop [component]
     (dissoc component :state)))
 
-(defn new-producer []
+(defn new-queue []
   (map->Queue {}))
 
 (defn produce [component data]
@@ -23,7 +23,7 @@
     val))
 
 (comment
-  (let [comp (component/start (new-producer))]
+  (let [comp (component/start (new-queue))]
     (produce comp {:a 1})
     (produce comp {:b 2})
     (prn (consume comp))
