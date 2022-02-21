@@ -14,22 +14,22 @@
     service-map
     (http/start service-map)))
 
-(defn set-components [db service-map]
+(defn set-components [db queue service-map]
   (-> service-map
       http/default-interceptors
       (update ::http/interceptors conj
               (interceptor/interceptor
                 {:name  ::components
-                 :enter #(assoc-in % [:request :db] db)}))))
+                 :enter #(update % :request assoc :db db :queue queue)}))))
 
-(defrecord Pedestal [service-map db service]
+(defrecord Pedestal [service-map db queue service]
 
   component/Lifecycle
   (start [this]
     (if service
       this
       (->> service-map
-           (set-components db)
+           (set-components db queue)
            http/create-server
            start-server
            (assoc this :service))))

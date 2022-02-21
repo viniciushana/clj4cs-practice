@@ -22,4 +22,4 @@
     :pedestal
     (component/using
       (pedestal/new-pedestal)
-      [:service-map :db])))
+      [:service-map :db :queue])))

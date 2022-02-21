@@ -33,4 +33,4 @@
                                                          :headers {"Content-Type" "application/json"}
                                                          :body (json/encode {:a 1}))]
                  (is (= status 200))
-                 (is (= body "{\"requested\":{\"a\":1},\"db\":[]}")))))
+                 (is (= body "{\"requested\":{\"a\":1},\"db\":[],\"queue\":[]}")))))

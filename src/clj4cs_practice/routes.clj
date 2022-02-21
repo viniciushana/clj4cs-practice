@@ -7,6 +7,7 @@
 
 (defn healthcheck [request]
   (ring-resp/response {:requested (:json-params request)
-                       :db        (-> request :db :state deref)}))
+                       :db        (-> request :db :state deref)
+                       :queue     (-> request :queue :state deref)}))
 
 (def routes #{["/healthcheck" :post (conj common-interceptors `healthcheck) :route-name :healthcheck]})
