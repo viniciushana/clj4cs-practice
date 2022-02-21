@@ -21,10 +21,3 @@
   (let [val (peek @state)]
     (swap! state pop)
     val))
-
-(comment
-  (let [comp (component/start (new-queue))]
-    (produce comp {:a 1})
-    (produce comp {:b 2})
-    (prn (consume comp))
-    (prn (consume comp))))

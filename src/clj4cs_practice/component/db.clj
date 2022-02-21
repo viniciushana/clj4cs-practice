@@ -23,12 +23,3 @@
 
 (defn query [{state :state} criteria]
   (filter criteria @state))
-
-(comment
-  (let [comp (component/start (new-db))]
-    (store comp {:coisa 1})
-    (store comp {:coisa 2})
-    (store comp {:coisa 3})
-    (store comp {:coisa 4})
-    (prn (query comp identity))
-    (prn (query comp #(-> % :coisa even?)))))
