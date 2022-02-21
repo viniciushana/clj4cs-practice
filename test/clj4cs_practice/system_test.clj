@@ -24,13 +24,13 @@
        (finally
          (component/stop ~bound-var)))))
 
-(deftest greeting-test
+(deftest healthcheck-test
   (with-system [sut (system/new-system :test)]
                (let [service               (service-fn sut)
                      {:keys [status body]} (response-for service
                                                          :post
-                                                         (url-for :greet)
+                                                         (url-for :healthcheck)
                                                          :headers {"Content-Type" "application/json"}
                                                          :body (json/encode {:a 1}))]
                  (is (= status 200))
-                 (is (= body "{\"entity\":{\"a\":1,\"responded\":\"ok\"}}")))))
+                 (is (= body "{\"requested\":{\"a\":1},\"db\":[]}")))))

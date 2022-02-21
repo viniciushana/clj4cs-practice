@@ -20,6 +20,6 @@
      ::http/join?  false}
 
     :pedestal
-    (component/using                                        ; using permite definir interdependências entre componentes
-      (pedestal/new-pedestal)                               ; aqui, cria-se a dependência em si
-      [:service-map])))                                     ; aqui, o vector determina quais componentes são necessários
+    (component/using
+      (pedestal/new-pedestal)
+      [:service-map :db])))

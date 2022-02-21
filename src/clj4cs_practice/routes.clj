@@ -3,9 +3,10 @@
             [io.pedestal.http.body-params :as body-params]
             [io.pedestal.http :as http]))
 
-(defn home-page [{json :json-params}]
-  (ring-resp/response {:entity (assoc json :responded "ok")}))
-
 (def common-interceptors [(body-params/body-params) http/json-body])
 
-(def routes #{["/" :post (conj common-interceptors `home-page) :route-name :greet]})
+(defn healthcheck [request]
+  (ring-resp/response {:requested (:json-params request)
+                       :db        (-> request :db :state deref)}))
+
+(def routes #{["/healthcheck" :post (conj common-interceptors `healthcheck) :route-name :healthcheck]})
